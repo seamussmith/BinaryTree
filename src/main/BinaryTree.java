@@ -1,14 +1,22 @@
 package main;
 
-public class BinaryTree<TElement>
+public class BinaryTree
 {
-    public Node head = new Node();
+    public Node head;
     public BinaryTree()
     {
     }
-    public BinaryTree(TElement data)
+    public BinaryTree(int max)
     {
-        this.head.data = data;
+        this.head = buildTree(1, max);
+    }
+    private Node buildTree(int n, int max)
+    {
+        if (n > max)
+            return null;
+        Node left = buildTree(n * 2, max);
+        Node right = buildTree(n * 2 + 1, max);
+        return new Node(n, left, right);
     }
     public void printPreorder()
     {
@@ -16,15 +24,17 @@ public class BinaryTree<TElement>
     }
     public class Node
     {
-        public TElement data;
+        public int data;
         public Node left;
         public Node right;
         public Node()
         {
         }
-        public Node(TElement data)
+        public Node(int data, Node left, Node right)
         {
             this.data = data;
+            this.left = left;
+            this.right = right;
         }
         // An object oriented recursion? Don't see that all day!
         public void printPreorder()
