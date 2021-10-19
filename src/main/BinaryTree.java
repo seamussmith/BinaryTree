@@ -20,7 +20,7 @@ public class BinaryTree
     }
     public void printPreorder()
     {
-        head.printPreorder();
+        head.printInorder();
     }
     public class Node
     {
@@ -37,13 +37,13 @@ public class BinaryTree
             this.right = right;
         }
         // An object oriented recursion? Don't see that all day!
-        public void printPreorder()
+        public void printInorder()
         {
-            System.out.println(data);
             if (left != null)
-                left.printPreorder();
+                left.printInorder();
+            System.out.println(data);
             if (right != null)
-                right.printPreorder();
+                right.printInorder();
         }
         public boolean isLeaf()
         {
