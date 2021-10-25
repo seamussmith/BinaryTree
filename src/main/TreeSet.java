@@ -11,7 +11,7 @@ public class TreeSet<
     >
     extends AbstractSet<TElement>
 {
-    public Node head;
+    private Node head;
     private int size = 0;
     public int size() { return size; }
 
@@ -51,8 +51,8 @@ public class TreeSet<
                 return true;
             }
             // If you insert null into my tree, screw you
-            var comp = e.compareTo(curr.data);
             prev = curr;
+            var comp = e.compareTo(curr.data);
             if (comp == 0)
             {
                 return false;
@@ -66,6 +66,67 @@ public class TreeSet<
             {
                 isLeft = true;
                 curr = curr.left;
+            }
+        }
+    }
+
+    @Override
+    public boolean remove(Object o)
+    {
+        var element = (Comparable<TElement>)o;
+        if (head == null)
+        {
+            return false;
+        }
+        Node curr = head;
+        Node prev = null;
+        boolean isLeft = false;
+        while (true)
+        {
+            if (curr == null)
+            {
+                return false;
+            }
+            // If you insert null into my tree, screw you
+            var comp = element.compareTo(curr.data);
+            if (comp == 0)
+            {
+                if (curr.right == null && curr.left == null)
+                {
+                    if (isLeft)
+                        prev.left = null;
+                    else    
+                        prev.right = null;
+                }
+                else if (curr.left == null && curr.right != null)
+                {
+                    prev.right = curr.right;
+                }
+                else if (curr.right == null && curr.left != null)
+                {
+                    prev.left = curr.left;
+                }
+                else
+                {
+                    curr.data = curr.left.data;
+                    element = curr.left.data;
+                    prev = curr;
+                    curr = curr.left;
+                    isLeft = true;
+                    continue;
+                }
+                return true;
+            }
+            prev = curr;
+            if (comp > 0)
+            {
+                curr = curr.right;
+                isLeft = false;
+            }
+            else if (comp < 0)
+            {
+                curr = curr.left;
+                isLeft = true;
             }
         }
     }
@@ -130,7 +191,7 @@ public class TreeSet<
     @Override
     public Iterator iterator()
     {
-        return null;
+        return new TreeSetItterator();
     }
 
     public class TreeSetItterator implements ListIterator<TElement>
