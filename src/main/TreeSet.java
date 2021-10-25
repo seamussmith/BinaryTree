@@ -191,25 +191,32 @@ public class TreeSet<
     @Override
     public Iterator iterator()
     {
-        return new TreeSetItterator();
+        return new TreeSetIterator();
     }
 
-    public class TreeSetItterator implements ListIterator<TElement>
+    public class TreeSetIterator implements ListIterator<TElement>
     {
         Stack<Node> nodes = new Stack<>();
-        public TreeSetItterator()
+        public TreeSetIterator()
         {
             nodes.push(TreeSet.this.head);
+            while (nodes.peek().left != null)
+            {
+                nodes.push(nodes.peek().left);
+            }
         }
         @Override
         public boolean hasNext() {
-            // TODO Auto-generated method stub
-            return false;
+            return !nodes.isEmpty();
         }
         @Override
         public TElement next() {
-            // TODO Auto-generated method stub
-            return null;
+            var pop = nodes.pop();
+            if (pop.left != null)
+                nodes.push(pop.left);
+            if (pop.right != null)
+                nodes.push(pop.right);
+            return pop.data;
         }
         @Override
         public boolean hasPrevious() {
