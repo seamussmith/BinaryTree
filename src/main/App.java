@@ -12,8 +12,6 @@ public class App
         tree.add(2);
         tree.add(-3);
         tree.add(-1);
-        System.out.println(tree.containsAll(Arrays.asList(2, -3)));
-        System.out.println(tree.contains(-2));
-        tree.printInorder();
+        System.out.println(tree);
     }
 }

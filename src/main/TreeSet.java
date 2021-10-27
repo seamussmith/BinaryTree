@@ -131,38 +131,6 @@ public class TreeSet<
         }
     }
 
-    @Override
-    public boolean contains(Object o)
-    {
-        var element = (Comparable<TElement>)o;
-        if (head == null)
-        {
-            return false;
-        }
-        Node curr = head;
-        while (true)
-        {
-            if (curr == null)
-            {
-                return false;
-            }
-            // If you insert null into my tree, screw you
-            var comp = element.compareTo(curr.data);
-            if (comp == 0)
-            {
-                return true;
-            }
-            else if (comp > 0)
-            {
-                curr = curr.right;
-            }
-            else if (comp < 0)
-            {
-                curr = curr.left;
-            }
-        }
-    }
-
     private class Node
     {
         Node left;
@@ -197,6 +165,7 @@ public class TreeSet<
     public class TreeSetIterator implements ListIterator<TElement>
     {
         Stack<Node> nodes = new Stack<>();
+        Node curr;
         public TreeSetIterator()
         {
             nodes.push(TreeSet.this.head);
@@ -206,52 +175,63 @@ public class TreeSet<
             }
         }
         @Override
-        public boolean hasNext() {
+        public boolean hasNext()
+        {
             return !nodes.isEmpty();
         }
         @Override
-        public TElement next() {
+        public TElement next()
+        {
             var pop = nodes.pop();
-            if (pop.left != null)
-                nodes.push(pop.left);
+            var leftpop = pop.left;
             if (pop.right != null)
-                nodes.push(pop.right);
+            {
+                leftpop = pop.right;
+                while (leftpop != null)
+                {
+                    nodes.push(leftpop);
+                    leftpop = leftpop.left;
+                }
+            }
+            curr = pop;
             return pop.data;
         }
         @Override
-        public boolean hasPrevious() {
+        public boolean hasPrevious()
+        {
             // TODO Auto-generated method stub
             return false;
         }
         @Override
-        public TElement previous() {
+        public TElement previous()
+        {
             // TODO Auto-generated method stub
             return null;
         }
         @Override
-        public int nextIndex() {
+        public int nextIndex()
+        {
             // TODO Auto-generated method stub
             return 0;
         }
         @Override
-        public int previousIndex() {
+        public int previousIndex()
+        {
             // TODO Auto-generated method stub
             return 0;
         }
         @Override
-        public void remove() {
-            // TODO Auto-generated method stub
-            
+        public void remove()
+        {
+            TreeSet.this.remove(curr);
         }
         @Override
         public void set(TElement e) {
-            // TODO Auto-generated method stub
-            
+            throw new UnsupportedOperationException("Cannot set node in a TreeSet");
         }
         @Override
         public void add(TElement e) {
-            // TODO Auto-generated method stub
-            
+            throw new UnsupportedOperationException("Cannot set node in a TreeSet");
         }
 
     }
