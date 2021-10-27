@@ -156,12 +156,30 @@ public class TreeSet<
         }
     }
 
+    class TreeSetTraverser
+    {
+        Stack<Node> nodes = new Stack<>();
+        Node curr = TreeSet.this.head;
+        void goLeft()
+        {
+            nodes.push(curr);
+            curr = curr.left;
+        }
+        void goRight()
+        {
+            nodes.push(curr); 
+            curr = curr.right;
+        }
+        void goBack()
+        {
+            curr = nodes.pop();
+        }
+    }
     @Override
     public Iterator iterator()
     {
         return new TreeSetIterator();
     }
-
     public class TreeSetIterator implements ListIterator<TElement>
     {
         Stack<Node> nodes = new Stack<>();
