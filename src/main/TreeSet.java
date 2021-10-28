@@ -31,42 +31,19 @@ public class TreeSet<
     public boolean add(TElement e)
     {
         if (head == null)
-        {
             head = new Node(e);
-            ++size;
-            return true;
-        }
-        Node prev = null;
-        Node curr = head;
-        boolean isLeft = false;
+        var trav = new TreeSetTraverser();
         while (true)
         {
-            if (curr == null)
+            if (trav.curr == null)
             {
-                if (isLeft)
-                    prev.left = new Node(e);
-                else
-                    prev.right = new Node(e);
-                ++size;
+                trav.setLeaf(e);
                 return true;
             }
-            // If you insert null into my tree, screw you
-            prev = curr;
-            var comp = e.compareTo(curr.data);
+            var comp = e.compareTo(trav.curr.data);
             if (comp == 0)
-            {
                 return false;
-            }
-            else if (comp > 0)
-            {
-                isLeft = false;
-                curr = curr.right;
-            }
-            else if (comp < 0)
-            {
-                isLeft = true;
-                curr = curr.left;
-            }
+            trav.goInDirection(comp);
         }
     }
 
@@ -160,19 +137,44 @@ public class TreeSet<
     {
         Stack<Node> nodes = new Stack<>();
         Node curr = TreeSet.this.head;
+        boolean wentLeft = false;
+        TreeSetTraverser()
+        {
+            nodes.push(curr);
+        }
         void goLeft()
         {
+            wentLeft = true;
             nodes.push(curr);
             curr = curr.left;
         }
         void goRight()
         {
+            wentLeft = false;
             nodes.push(curr); 
             curr = curr.right;
         }
         void goBack()
         {
             curr = nodes.pop();
+        }
+        void goInDirection(int dir)
+        {
+            if (dir == 0)
+                return;
+            else if (dir > 0)
+                goRight();
+            else if (dir < 0)
+                goLeft();
+        }
+        void setLeaf(TElement val)
+        {
+            if (curr != null)
+                throw new IllegalStateException("Must be at a leaf position");
+            if (wentLeft)
+                nodes.peek().left = new Node(val);
+            else
+                nodes.peek().right = new Node(val);
         }
     }
     @Override
